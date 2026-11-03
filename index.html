@@ -199,7 +199,36 @@
   .toast {max-width:85vw}
 }
 
+
+/* Modo imersivo FUT5: fullscreen real em telefone deitado. */
+.mobile-fullscreen-btn{display:none}
+.fullscreen-guide h2{font-size:clamp(22px,4vw,32px);color:#efffd9;margin:14px 0 10px}
+.fullscreen-guide p{font-size:13px;line-height:1.55;color:#c3d7da}
+.fullscreen-guide strong{color:#d8ff8c}
+.fullscreen-guide .guide-device{background:#122c32;border:1px solid #395661;border-radius:9px;padding:9px 12px;margin:8px 0}
+.fullscreen-guide .guide-device p{margin:4px 0}
+.fullscreen-guide .device-heading{font-weight:900;letter-spacing:.6px;color:#d4fb89}
+@media(orientation:landscape) and (max-height:650px) and (pointer:coarse){
+ .mobile-fullscreen-btn{position:fixed!important;z-index:35!important;left:max(8px,env(safe-area-inset-left))!important;top:max(7px,env(safe-area-inset-top))!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:35px!important;padding:0 12px!important;border:1px solid #b8f468ba!important;border-radius:9px!important;background:#102925e8!important;color:#eaffb8!important;font:850 11px/1.2 system-ui,Arial,sans-serif!important;box-shadow:0 3px 16px #0009!important;cursor:pointer!important}
+ html:fullscreen .mobile-fullscreen-btn,html:-webkit-full-screen .mobile-fullscreen-btn,html.fut5-standalone .mobile-fullscreen-btn{display:none!important}
+ html:fullscreen,html:-webkit-full-screen{height:100%;overflow:hidden}
+ html:fullscreen .overlay,html:-webkit-full-screen .overlay{z-index:60!important}
+ .fullscreen-guide .dialog{max-height:100%!important;overflow-y:auto!important}
+ .fullscreen-guide .guide-device{padding:5px 9px;margin:5px 0}
+ .fullscreen-guide h2{font-size:19px!important;margin:6px 0}
+ .fullscreen-guide p{font-size:10px!important;margin:2px 0}
+ .fullscreen-guide .guide-device p{font-size:9px!important}
+}
+@media(orientation:landscape) and (pointer:coarse){
+ html:fullscreen .app,html:-webkit-full-screen .app,html.fut5-standalone .app{height:100dvh!important;width:100vw!important}
+}
 </style>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FUT5 ARENA">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -232,6 +261,7 @@
         <div class="field-corner-tag">FUT5 <span>ARENA</span></div>
         <div class="field-corner-info">ESTÁDIO // 01</div>
       </div>
+      <button id="mobileFullscreenButton" class="mobile-fullscreen-btn" type="button" aria-label="Expandir jogo e ocultar barra de endereço">⛶ TELA CHEIA</button>
       <div class="game-footer">
         <div class="turn-indicator" id="turnIndicator"><span class="turn-led"></span><div class="turn-info"><small>VEZ DE JOGAR</small><strong id="turnName">AGUARDANDO...</strong></div></div>
         <div class="footer-tip"><span class="mouse-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6.5" y="2.3" width="11" height="19.5" rx="5.5"/><path d="M12 3v6"/></svg></span><span><b>CLIQUE EM UM DISCO</b> · ARRASTE PARA MIRAR · SOLTE PARA CHUTAR</span></div>
@@ -297,6 +327,16 @@
     <footer class="site-footer"><span>FUT5 ARENA · JOGO ORIGINAL PARA NAVEGADOR</span><span>FEITO PARA JOGAR. NÃO PARA ESPERAR.</span></footer>
   </main>
 
+  <div class="overlay hidden fullscreen-guide" id="fullscreenHelp" role="dialog" aria-modal="true" aria-labelledby="fullscreenHelpTitle">
+    <div class="dialog small-dialog">
+      <div class="dialog-topline"><span><span class="micro-square"></span> MODO IMERSIVO</span><button type="button" class="x-btn" id="fullscreenHelpClose" aria-label="Fechar">✕</button></div>
+      <h2 id="fullscreenHelpTitle">JOGAR SEM BARRA DE ENDEREÇO</h2>
+      <p>O navegador não permitiu ocultar a barra automaticamente. Instale o FUT5 na tela inicial para jogar como aplicativo.</p>
+      <div class="guide-device"><div class="device-heading">ANDROID · CHROME</div><p>Menu <strong>⋮</strong> → <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong> → abra pelo ícone do FUT5.</p></div>
+      <div class="guide-device"><div class="device-heading">IPHONE · SAFARI</div><p><strong>Compartilhar</strong> → <strong>Adicionar à Tela de Início</strong> → abra pelo ícone, não pela aba do Safari.</p></div>
+      <button id="fullscreenHelpOk" class="play-button smaller" type="button">ENTENDI · CONTINUAR JOGANDO</button>
+    </div>
+  </div>
   <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-labelledby="menuHeading">
     <div class="dialog menu-dialog">
       <div class="dialog-topline"><span><span class="micro-square"></span> NOVA PARTIDA</span><span>V1.0 / FUT5 ARENA</span></div>
@@ -1226,6 +1266,7 @@
       $('difficultyControl').querySelectorAll('.difficulty-option').forEach(e=>e.classList.toggle('selected',e===btn));sound('select');
     }));
     $('startButton').addEventListener('click',()=>{
+      if(onPhone() && window.matchMedia('(orientation: landscape)').matches)enterFut5Fullscreen();
       state.teamB=(state.selectedTeam+2+Math.floor(Math.random()*5))%teams.length;
       if(state.teamB===state.selectedTeam)state.teamB=(state.selectedTeam+3)%teams.length;
       beginMatch();
@@ -1253,10 +1294,14 @@
       $('audioButton').classList.toggle('active',audioEnabled);
       $('audioButton').setAttribute('aria-label',audioEnabled?'Desativar áudio':'Ativar áudio');
       if(audioEnabled)sound('select');});
-    $('fullscreenButton').addEventListener('click',async()=>{
-      try{if(document.fullscreenElement)await document.exitFullscreen();
-        else await $('gameShell').requestFullscreen();}catch(_){showToast('TELA CHEIA NÃO DISPONÍVEL NESTE NAVEGADOR');}
-    });
+    $('fullscreenButton').addEventListener('click',toggleFut5Fullscreen);
+    $('mobileFullscreenButton').addEventListener('click',enterFut5Fullscreen);
+    $('fullscreenHelpClose').addEventListener('click',closeFullscreenHelp);
+    $('fullscreenHelpOk').addEventListener('click',closeFullscreenHelp);
+    document.addEventListener('fullscreenchange',updateFullscreenUI);
+    document.addEventListener('webkitfullscreenchange',updateFullscreenUI);
+    window.addEventListener('orientationchange',updateFullscreenUI);
+    updateFullscreenUI();
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape'){
         if(!$('helpOverlay').classList.contains('hidden')){helpClose();return;}
@@ -1275,9 +1320,39 @@
     if(canvas.width!==targetW||canvas.height!==targetH){canvas.width=targetW;canvas.height=targetH;ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);}
     else ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
   }
+
+  function onPhone(){return window.matchMedia('(pointer: coarse)').matches;}
+  function isStandaloneMode(){return window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;}
+  function isImmersive(){return !!(document.fullscreenElement||document.webkitFullscreenElement)||isStandaloneMode();}
+  function updateFullscreenUI(){
+    document.documentElement.classList.toggle('fut5-standalone',isStandaloneMode());
+    const btn=$('mobileFullscreenButton');
+    if(btn){btn.disabled=isImmersive();btn.setAttribute('aria-hidden',isImmersive()?'true':'false');}
+  }
+  function showFullscreenHelp(){$('fullscreenHelp')?.classList.remove('hidden');}
+  function closeFullscreenHelp(){$('fullscreenHelp')?.classList.add('hidden');}
+  function enterFut5Fullscreen(){
+    if(isImmersive()){updateFullscreenUI();return;}
+    const root=document.documentElement, fn=root.requestFullscreen||root.webkitRequestFullscreen;
+    if(!fn){showFullscreenHelp();return;}
+    try{const pending=fn.call(root,{navigationUI:'hide'});
+      Promise.resolve(pending).then(updateFullscreenUI).catch(()=>{updateFullscreenUI();showFullscreenHelp();});
+    }catch(_){updateFullscreenUI();showFullscreenHelp();}
+  }
+  function toggleFut5Fullscreen(){
+    if(document.fullscreenElement||document.webkitFullscreenElement){
+      const fn=document.exitFullscreen||document.webkitExitFullscreen;
+      if(fn){try{Promise.resolve(fn.call(document)).catch(()=>{});}catch(_){}}
+    }else enterFut5Fullscreen();
+  }
+
   function init(){
     buildMenu();resetFormation();setMatchColors();updateScore();updateTurn();updateStageUI();createBg();resizeResolution();
     initCalibrationControls();
+    if('serviceWorker' in navigator && location.protocol==='https:'){
+      window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}),{once:true});
+    }
     window.addEventListener('resize',resizeResolution,{passive:true});
     let last=performance.now();
     function frame(now){const dt=clamp((now-last)/1000,0,.033);last=now;
