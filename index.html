@@ -91,6 +91,114 @@
 .next-countdown{margin:0 0 16px!important;font-size:12px!important;color:#cdeea5!important;font-weight:800}
 @media(max-width:700px){.stage-switcher{padding:11px;gap:9px}.stage-summary strong{font-size:12px}.stage-choice{padding:7px 8px;font-size:9px;gap:4px}.stage-choice b{font-size:12px}.stage-buttons{gap:5px}}
 
+
+/* FUT5 Mobile Landscape v2 — occupy every available pixel. The canvas is
+   stretched to the display rectangle, never cropped. Pointer hit testing
+   already normalizes by the rendered canvas rectangle, so shooting stays exact.
+   Small, optional pause control remains accessible. */
+@media (orientation: landscape) and (max-height: 650px) and (pointer: coarse) {
+  html, body {
+    width:100%!important; height:100%!important;
+    margin:0!important; padding:0!important;
+    overflow:hidden!important;
+    overscroll-behavior:none!important;
+  }
+  body {position:fixed; inset:0; background:#08171e;}
+  .ambient, .topbar, .xray-toolbar, .xray-panel, .stage-switcher,
+  .below, .site-footer {display:none!important}
+  .app {
+    position:fixed!important; inset:0!important;
+    width:100vw!important; height:100dvh!important;
+    max-width:none!important; margin:0!important;
+    padding:0!important; overflow:hidden!important;
+  }
+  .game-shell, .game-shell:fullscreen {
+    position:fixed!important; inset:0!important;
+    width:100vw!important; height:100dvh!important;
+    max-width:none!important; max-height:none!important;
+    padding:0!important; margin:0!important;
+    display:block!important; overflow:hidden!important;
+    border:0!important; border-radius:0!important;
+    background:#08171e!important; box-shadow:none!important;
+  }
+  .game-shell .stage, .game-shell:fullscreen .stage {
+    position:absolute!important; inset:0!important;
+    display:block!important;
+    width:100%!important; height:100%!important;
+    min-width:0!important; max-width:none!important;
+    min-height:0!important; max-height:none!important;
+    aspect-ratio:auto!important; border:0!important;
+    border-radius:0!important; margin:0!important;
+  }
+  .stage canvas {
+    position:absolute; inset:0; width:100%!important; height:100%!important;
+    object-fit:fill; display:block; touch-action:none!important;
+  }
+  .stage-shine, .scoreboard, .match-pill,
+  .field-corner-tag, .field-corner-info, .aim-notice {
+    display:none!important;
+  }
+  .game-footer, .game-shell:fullscreen .game-footer {
+    display:contents!important; width:auto!important; padding:0!important;
+  }
+  .turn-indicator,.footer-tip {display:none!important;}
+  .footer-actions {
+    position:absolute!important; z-index:20!important;
+    right:max(6px,env(safe-area-inset-right))!important;
+    top:max(6px,env(safe-area-inset-top))!important;
+    display:flex!important; margin:0!important; padding:0!important;
+  }
+  #resetButton {display:none!important}
+  #pauseButton {
+    min-width:32px!important; width:32px!important; height:32px!important;
+    padding:0!important; justify-content:center!important;
+    border-radius:9px!important; border:1px solid #cce9ef60!important;
+    background:#0a1723aa!important; color:white!important;
+    font-size:17px!important; opacity:.78;
+  }
+  #pauseButton span {display:none!important}
+  #pauseButton:disabled {display:none!important}
+  .overlay {
+    position:fixed!important; inset:0!important;
+    width:100vw!important; height:100dvh!important;
+    padding:max(6px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right))
+            max(6px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))!important;
+    overflow:hidden!important; align-items:center!important;
+    background:#06141eea!important; backdrop-filter:blur(4px)!important;
+  }
+  .dialog {
+    width:min(700px,100%)!important;
+    max-height:100%!important; overflow:auto!important;
+    padding:10px 15px 12px!important;
+    border-radius:11px!important;
+    scrollbar-width:thin;
+  }
+  .dialog-topline {font-size:8px!important; letter-spacing:.5px!important;}
+  .menu-hero {min-height:0!important; padding-top:7px!important; align-items:start!important;}
+  .menu-hero h1 {font-size:clamp(23px,5.5vh,34px)!important; letter-spacing:-1px!important; line-height:1!important;}
+  .menu-hero p {font-size:10px!important; margin:5px 0 2px!important;line-height:1.3!important;}
+  .menu-hero p br {display:none!important}
+  .eyebrow {margin:0 0 4px!important; font-size:8px!important;}
+  .hero-ball {display:none!important}
+  .menu-columns {display:grid!important; grid-template-columns:1fr 1fr!important; margin:7px 0!important; gap:15px!important;}
+  .menu-section-label {margin-bottom:6px!important; font-size:8px!important;}
+  .team-options {grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;}
+  .team-card {padding:4px 2px!important;gap:2px!important}
+  .team-disc {width:21px!important;height:21px!important;font-size:9px!important}
+  .team-card small {display:block!important;font-size:7px!important}
+  .mode-options {display:flex!important;flex-direction:column!important;gap:4px!important}
+  .mode-card {min-height:30px!important;padding:4px 8px!important}
+  .mode-card small {font-size:7px!important}
+  .difficulty-label {margin:5px 0 3px!important;font-size:7px!important}
+  .difficulty-option {padding:4px 0!important}
+  .play-button {padding:8px 13px!important;font-size:12px!important}
+  .menu-footnote {display:none!important}
+  .small-dialog h2,.result-dialog h2,.pause-dialog h2 {font-size:27px!important}
+  .steps {gap:8px!important}
+  .step p {font-size:10px!important;margin:3px 0!important}
+  .toast {max-width:85vw}
+}
+
 </style>
 </head>
 <body>
