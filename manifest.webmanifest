@@ -1,0 +1,27 @@
+{
+  "name": "FUT5 Arena — Futebol de Mesa",
+  "short_name": "FUT5 Arena",
+  "description": "Futebol de mesa 5 contra 5, quatro arenas e modo tela cheia no celular.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#071416",
+  "theme_color": "#071416",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
